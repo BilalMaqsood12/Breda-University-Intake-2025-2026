@@ -1,8 +1,9 @@
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    [Header ("MOVEMET SETTINGS")]
+    [Header("MOVEMET SETTINGS")]
     [SerializeField, Range(0f, 100f)] private float _maxSpeed = 4f;
     [SerializeField, Range(0f, 100f)] private float _maxAcceleration = 35f;
     [SerializeField, Range(0f, 100f)] private float _maxAirAcceleration = 20f;
@@ -32,12 +33,13 @@ public class PlayerController : MonoBehaviour
 
     private bool jumpPressed;
 
-    [Header ("GROUND DETECTION")]
+    [Header("GROUND DETECTION")]
     [SerializeField] private float groundDetectionRadius = 0.3f;
     [SerializeField] private Vector3 groundDetectionOffset = new Vector3(0, -1f, 0);
     [SerializeField] private LayerMask groundIgnoreLayerMask;
 
     [Header("WALL CLIMBING")]
+    [SerializeField] private float wallDetectionRadius = 0.7f;
     [SerializeField] private float wallHangGravity = 0.2f;
     [SerializeField] private float wallHangTime = 1f;
     [SerializeField] private Vector2 wallJumpForce; //X is the force on sideways, and Y is the force on upwards direction.
@@ -48,12 +50,15 @@ public class PlayerController : MonoBehaviour
 
     WallGrabDirection wallGrabDirection;
 
-    private enum WallGrabDirection { Left, Right }
+    private enum WallGrabDirection { None, Left, Right }
 
 
     //Components
     private Rigidbody2D rb;
 
+    //Debugging
+    Vector2 playerGroundedPoint;
+    Vector2 playerLandingPoint;
 
 
     void Start()
@@ -65,8 +70,25 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
-        HandleMovementInput();
-        HandleJumpInput();
+        if (!climbingWall)
+        {
+            HandleMovementInput();
+            HandleJumpInput();
+        }
+
+        HandleWallClimbInput();
+
+
+
+        //Debugging
+        if (IsGrounded())
+        {
+            playerGroundedPoint = transform.position + groundDetectionOffset;
+        }
+        else
+        {
+            playerLandingPoint = transform.position + groundDetectionOffset;
+        }
     }
 
     private void FixedUpdate()
@@ -104,7 +126,7 @@ public class PlayerController : MonoBehaviour
             _jumpPressedRememberTime = jumpPressedRememberTime;
 
         }
-     
+
         if (IsGrounded())
         {
             _groundRememberTime = groundRememberTime;
@@ -116,18 +138,23 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    private void HandleWallClimbInput()
+    {
+        jumpPressed |= Input.GetButtonDown("Jump");
+    }
+
 
     private void MovePlayer()
     {
         _velocity = rb.linearVelocity;
-        
+
         _acceleration = IsGrounded() ? _maxAcceleration : _maxAirAcceleration;
         _maxSpeedChange = _acceleration * Time.deltaTime;
         _velocity.x = Mathf.MoveTowards(_velocity.x, _desiredVelocity.x, _maxSpeedChange);
 
         rb.linearVelocity = _velocity;
     }
-    
+
     private void HandleJumpPhysics()
     {
         if (IsGrounded())
@@ -160,7 +187,6 @@ public class PlayerController : MonoBehaviour
         }
 
         rb.linearVelocity = _velocity;
-
     }
 
     private void JumpAction()
@@ -184,16 +210,19 @@ public class PlayerController : MonoBehaviour
     }
 
 
+
     private void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.gameObject.layer == LayerMask.NameToLayer("Climbable Wall"))
         {
-            if (!IsGrounded())
+            // Wall grab conditions:
+            if (!IsGrounded() && wallGrabDirection != WallGrabDirection.None && transform.position.y > playerGroundedPoint.y)
             {
                 GrabWall();
-            }    
+            }
         }
     }
+
 
     private void GrabWall()
     {
@@ -205,56 +234,49 @@ public class PlayerController : MonoBehaviour
 
     private void ClimbingBehaviour()
     {
-        if (climbingWall)
+        // Detect walls on both sides
+        RaycastHit2D leftWallDetector = Physics2D.Raycast(transform.position, -transform.right, wallDetectionRadius, wallLayer);
+        RaycastHit2D rightWallDetector = Physics2D.Raycast(transform.position, transform.right, wallDetectionRadius, wallLayer);
+
+        // Determine which wall the player is touching
+        if (leftWallDetector.collider != null)
+            wallGrabDirection = WallGrabDirection.Left;
+        else if (rightWallDetector.collider != null)
+            wallGrabDirection = WallGrabDirection.Right;
+        else
+            wallGrabDirection = WallGrabDirection.None;
+
+        
+
+        if (!climbingWall) return;
+
+        // Decrease wall hang time
+        _wallHangTime -= Time.deltaTime;
+        if (_wallHangTime <= 0)
         {
-            _wallHangTime -= Time.deltaTime;
-            if (_wallHangTime < 0)
-            {
-                rb.gravityScale = defaultGravityScale;
-                climbingWall = false;
-            }
+            rb.gravityScale = defaultGravityScale;
+            climbingWall = false;
 
 
-            RaycastHit2D leftWallDetector = Physics2D.Raycast(transform.position, -transform.right, 1f, wallLayer);
-            RaycastHit2D rightWallDetector = Physics2D.Raycast(transform.position, transform.right, 1f, wallLayer);
-
-            if (leftWallDetector.collider != null)
-            {
-                wallGrabDirection = WallGrabDirection.Left;
-            }
-            else if (rightWallDetector.collider != null)
-            {
-                wallGrabDirection = WallGrabDirection.Right;
-            }
-
-            if (wallGrabDirection == WallGrabDirection.Left)
-            {
-                if (Input.GetButton("Jump"))
-                {
-                    rb.AddForce(transform.right * wallJumpForce.x * Time.deltaTime, ForceMode2D.Impulse);
-                    rb.AddForce(transform.up * wallJumpForce.y* Time.deltaTime, ForceMode2D.Impulse);
-
-                    rb.gravityScale = upwardMovementMultiplier;
-
-                    _wallHangTime = wallHangTime;
-
-                }
-            }
-            else if (wallGrabDirection == WallGrabDirection.Right)
-            {
-                if (Input.GetButton("Jump"))
-                {
-                    rb.AddForce(-transform.right * wallJumpForce.x * Time.deltaTime, ForceMode2D.Impulse);
-                    rb.AddForce(transform.up * wallJumpForce.y * Time.deltaTime, ForceMode2D.Impulse);
-
-                    rb.gravityScale = upwardMovementMultiplier;
-
-
-                    _wallHangTime = wallHangTime;
-
-                }
-            }
+            return;
         }
+
+        // Handle wall jumping
+        if (jumpPressed && wallGrabDirection != WallGrabDirection.None)
+        {
+            Vector2 jumpDirection = wallGrabDirection == WallGrabDirection.Left ? Vector2.right : Vector2.left;
+            rb.AddForce(jumpDirection * wallJumpForce.x, ForceMode2D.Impulse);
+            rb.AddForce(Vector2.up * wallJumpForce.y, ForceMode2D.Impulse);
+
+            rb.gravityScale = upwardMovementMultiplier;
+
+            _wallHangTime = wallHangTime;
+
+            jumpPressed = false;
+
+            //climbingWall = false;
+        }
+
     }
 
 
@@ -266,10 +288,24 @@ public class PlayerController : MonoBehaviour
 
         //Wall Side Detection        
         Gizmos.color = wallGrabDirection == WallGrabDirection.Left ? Color.green : Color.red;
-        Gizmos.DrawLine(transform.position, transform.position + (-transform.right * 1f));
+        Gizmos.DrawLine(transform.position, transform.position + (-transform.right * wallDetectionRadius));
 
         Gizmos.color = wallGrabDirection == WallGrabDirection.Right ? Color.green : Color.red;
-        Gizmos.DrawLine(transform.position, transform.position + (transform.right * 1f));
+        Gizmos.DrawLine(transform.position, transform.position + (transform.right * wallDetectionRadius));
+
+
+        if (playerGroundedPoint != Vector2.zero && !IsGrounded()) {
+            Gizmos.color = Color.red;
+            Gizmos.DrawLine(playerGroundedPoint, playerGroundedPoint + (Vector2.up * 2f));
+            Gizmos.DrawWireSphere(playerGroundedPoint, groundDetectionRadius);
+        }
+
+        if (playerLandingPoint != Vector2.zero && IsGrounded()) {
+            Gizmos.color = Color.cyan;
+            Gizmos.DrawLine(playerLandingPoint, playerLandingPoint + (Vector2.up * 2f));
+            Gizmos.DrawWireSphere(playerLandingPoint, groundDetectionRadius);
+        }
+
 
     }
 }
