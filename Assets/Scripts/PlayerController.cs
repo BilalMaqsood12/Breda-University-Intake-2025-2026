@@ -1,3 +1,4 @@
+using Unity.Cinemachine;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -220,6 +221,12 @@ public class PlayerController : MonoBehaviour
             {
                 GrabWall();
             }
+        }
+
+        if (collision.gameObject.tag == "Spike") //Reset Player Position if Collided to a spike
+        {
+            GameManager.instance.TeleportPlayerTo(GameManager.instance.startingPoint.position);
+            CameraManager.instance.ResetToDefaultCamera();
         }
     }
 
