@@ -7,6 +7,10 @@ public class GameManager : MonoBehaviour
     public Transform player;
     public Transform startingPoint;
 
+    [Header("GAMEPLAY")]
+    public bool enableSpeedBooster;
+    public float maxSpeedToBoost = 1.25f;
+    public float speedBoosterDuration = 6f;
 
 
     private void Awake()

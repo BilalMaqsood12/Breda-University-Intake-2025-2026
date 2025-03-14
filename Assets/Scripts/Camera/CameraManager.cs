@@ -1,3 +1,4 @@
+using System.Collections;
 using Unity.Cinemachine;
 using UnityEngine;
 
@@ -12,6 +13,8 @@ public class CameraManager : MonoBehaviour
     CinemachineCamera[] allCinemachineCamsInScene;
     CinemachineCamera defaultCam;
 
+    [HideInInspector] public CinemachineCamera currentCamera;
+
     private void Awake()
     {
         instance = this;
@@ -23,8 +26,11 @@ public class CameraManager : MonoBehaviour
         allCinemachineCamsInScene = GameObject.FindObjectsByType<CinemachineCamera>(FindObjectsInactive.Include, FindObjectsSortMode.None);
         foreach (CinemachineCamera cam in allCinemachineCamsInScene)
         {
-            if (cam.IsLive)
+            if (cam.IsLive) 
+            {
                 defaultCam = cam;
+                currentCamera = cam;
+            }
         }
     }
 
@@ -50,5 +56,23 @@ public class CameraManager : MonoBehaviour
         }
 
         defaultCam.enabled = true;
+        currentCamera = defaultCam;
     }
+
+
+    public void CameraShake(Vector3 value)
+    {
+        StartCoroutine(CameraShakeCouroutine(value.x, value.y, value.z));
+    }
+
+    private IEnumerator CameraShakeCouroutine(float amplitude, float frequecy, float time)
+    {
+        CinemachineBasicMultiChannelPerlin cm_Noise = currentCamera.GetComponent<CinemachineBasicMultiChannelPerlin>();
+        cm_Noise.AmplitudeGain = amplitude;
+        cm_Noise.FrequencyGain = frequecy;
+        yield return new WaitForSeconds(time);
+        cm_Noise.AmplitudeGain = 0;
+        cm_Noise.FrequencyGain = 0;
+    }
+
 }

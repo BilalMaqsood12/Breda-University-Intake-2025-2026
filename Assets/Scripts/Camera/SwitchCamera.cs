@@ -14,12 +14,17 @@ public class SwitchCamera : MonoBehaviour
             {
                 from.enabled = false;
                 to.enabled = true;
+            
+                CameraManager.instance.currentCamera = to;
             }
             else
             {
                 from.enabled = true;
                 to.enabled = false;
+                
+                CameraManager.instance.currentCamera = from;
             }
+
         }
     }
 }

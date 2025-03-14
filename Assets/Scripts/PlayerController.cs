@@ -1,9 +1,12 @@
+using System.Collections;
 using Unity.Cinemachine;
 using Unity.VisualScripting;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
+    public GameObject playerGFX;
+
     [Header("MOVEMET SETTINGS")]
     [SerializeField, Range(0f, 100f)] private float _maxSpeed = 4f;
     [SerializeField, Range(0f, 100f)] private float _maxAcceleration = 35f;
@@ -46,6 +49,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private Vector2 wallJumpForce; //X is the force on sideways, and Y is the force on upwards direction.
     [SerializeField] private LayerMask wallLayer;
 
+    bool canMove;
     bool climbingWall;
     float _wallHangTime;
 
@@ -67,19 +71,23 @@ public class PlayerController : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
 
         defaultGravityScale = 1f;
+
+        canMove = true;
     }
 
     void Update()
     {
-        if (!climbingWall)
+        if (canMove)
         {
-            HandleMovementInput();
-            HandleJumpInput();
+            if (!climbingWall)
+            {
+                HandleMovementInput();
+                HandleJumpInput();
+            }
+
+            HandleWallClimbInput();
+
         }
-
-        HandleWallClimbInput();
-
-
 
         //Debugging
         if (IsGrounded())
@@ -94,13 +102,16 @@ public class PlayerController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (!climbingWall)
+        if (canMove)
         {
-            MovePlayer();
-            HandleJumpPhysics();
-        }
+            if (!climbingWall)
+            {
+                MovePlayer();
+                HandleJumpPhysics();
+            }
 
-        ClimbingBehaviour();
+            ClimbingBehaviour();
+        }
     }
 
     private void HandleMovementInput()
@@ -110,7 +121,9 @@ public class PlayerController : MonoBehaviour
 
         if (_direction.x != 0)
             transform.localScale = new Vector2(_direction.x > 0 ? 1 : -1, transform.localScale.y);
+
     }
+
 
     private bool IsGrounded()
     {
@@ -133,9 +146,9 @@ public class PlayerController : MonoBehaviour
             _groundRememberTime = groundRememberTime;
         }
 
-        if (Input.GetButtonUp("Jump"))
+        if (Input.GetButtonUp("Jump") && rb.linearVelocity.y > 0)
         {
-            rb.linearVelocity = new Vector2(rb.linearVelocityX, rb.linearVelocityY * jumpCutHeight);
+            rb.linearVelocity = new Vector2(rb.linearVelocity.x, rb.linearVelocity.y * jumpCutHeight);
         }
     }
 
@@ -223,11 +236,48 @@ public class PlayerController : MonoBehaviour
             }
         }
 
-        if (collision.gameObject.tag == "Spike") //Reset Player Position if Collided to a spike
+        
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.gameObject.tag == "Spike" || collision.gameObject.tag == "Lava") //Reset Player Position if Collided to a spike
         {
-            GameManager.instance.TeleportPlayerTo(GameManager.instance.startingPoint.position);
-            CameraManager.instance.ResetToDefaultCamera();
+            StartCoroutine(Die());
         }
+
+        if (collision.gameObject.tag == "SpeedBooster")
+        {
+            LeanTween.value(Time.timeScale, 1.2f, 1f).setOnUpdate((float val)=>
+            {
+                Time.timeScale = val;
+            });
+        }
+    }
+
+    private IEnumerator Die()
+    {
+        canMove = false;
+        CameraManager.instance.CameraShake(new Vector3(2, 2, 0.15f));
+        rb.bodyType = RigidbodyType2D.Static;
+
+        playerGFX.gameObject.SetActive(false);
+        GetComponent<SpriteRenderer>().enabled = false;
+        GetComponent<TrailRenderer>().enabled = false;
+
+        yield return new WaitForSeconds(1f);
+
+
+        playerGFX.gameObject.SetActive(true);
+        GetComponent<SpriteRenderer>().enabled = true;
+        GetComponent<TrailRenderer>().enabled = true;
+
+        rb.bodyType = RigidbodyType2D.Dynamic;
+        GameManager.instance.TeleportPlayerTo(GameManager.instance.startingPoint.position);
+        CameraManager.instance.ResetToDefaultCamera();
+        canMove = true;
+
+        Time.timeScale = 1f;
     }
 
 
