@@ -4,6 +4,7 @@ using UnityEngine.SceneManagement;
 public class LevelSwitcher : MonoBehaviour
 {
     public string levelToSwitchWith = "Level Name";
+    public GameObject levelCompleteUI;
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
@@ -12,8 +13,15 @@ public class LevelSwitcher : MonoBehaviour
             if (Time.timeScale > 1)
                 Time.timeScale = 1f;
 
-            SceneManager.LoadScene(levelToSwitchWith);
+            levelCompleteUI.SetActive(true);
+            GameManager.instance.player.GetComponent<PlayerController>().canMove = false;
         }
+    }
+
+    public void Continue()
+    {
+        SceneManager.LoadScene(levelToSwitchWith);
+
     }
 
 }

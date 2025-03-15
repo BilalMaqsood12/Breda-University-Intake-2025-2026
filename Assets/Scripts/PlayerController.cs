@@ -49,7 +49,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private Vector2 wallJumpForce; //X is the force on sideways, and Y is the force on upwards direction.
     [SerializeField] private LayerMask wallLayer;
 
-    bool canMove;
+    [HideInInspector] public bool canMove;
     bool climbingWall;
     float _wallHangTime;
 
