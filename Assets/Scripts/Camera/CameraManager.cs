@@ -5,13 +5,13 @@ using UnityEngine;
 public class CameraManager : MonoBehaviour
 {
     public static CameraManager instance;
+    public CinemachineCamera defaultCam;
 
     public Transform[] horizontalFollowTransforms;
     public Transform[] verticalFollowTransforms;
 
 
     CinemachineCamera[] allCinemachineCamsInScene;
-    CinemachineCamera defaultCam;
 
     [HideInInspector] public CinemachineCamera currentCamera;
 
@@ -24,14 +24,9 @@ public class CameraManager : MonoBehaviour
     void Start()
     {
         allCinemachineCamsInScene = GameObject.FindObjectsByType<CinemachineCamera>(FindObjectsInactive.Include, FindObjectsSortMode.None);
-        foreach (CinemachineCamera cam in allCinemachineCamsInScene)
-        {
-            if (cam.IsLive) 
-            {
-                defaultCam = cam;
-                currentCamera = cam;
-            }
-        }
+
+        currentCamera = defaultCam;
+
     }
 
     // Update is called once per frame
