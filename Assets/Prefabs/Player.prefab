@@ -184,7 +184,7 @@ MonoBehaviour:
   groundIgnoreLayerMask:
     serializedVersion: 2
     m_Bits: 119
-  climbJumpPressedRememberTime: 0.2
+  climbJumpPressedRememberTime: 0.16
   wallDetectionRadius: 1
   wallHangGravity: 0.2
   wallHangTime: 0.25
