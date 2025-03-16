@@ -43,6 +43,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private LayerMask groundIgnoreLayerMask;
 
     [Header("WALL CLIMBING")]
+    [SerializeField] private float climbJumpPressedRememberTime = 0.3f;
     [SerializeField] private float wallDetectionRadius = 0.7f;
     [SerializeField] private float wallHangGravity = 0.2f;
     [SerializeField] private float wallHangTime = 1f;
@@ -52,6 +53,7 @@ public class PlayerController : MonoBehaviour
     [HideInInspector] public bool canMove;
     bool climbingWall;
     float _wallHangTime;
+    float _climbJumpPressedRememberTime;
 
     WallGrabDirection wallGrabDirection;
 
@@ -154,7 +156,13 @@ public class PlayerController : MonoBehaviour
 
     private void HandleWallClimbInput()
     {
-        jumpPressed |= Input.GetButtonDown("Jump");
+        if (Input.GetButtonDown("Jump"))
+        {
+            _climbJumpPressedRememberTime = climbJumpPressedRememberTime;
+        }
+
+        if (_climbJumpPressedRememberTime > 0)
+            _climbJumpPressedRememberTime -= Time.deltaTime;
     }
 
 
@@ -236,7 +244,6 @@ public class PlayerController : MonoBehaviour
             }
         }
 
-        
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -273,7 +280,7 @@ public class PlayerController : MonoBehaviour
         GetComponent<TrailRenderer>().enabled = true;
 
         rb.bodyType = RigidbodyType2D.Dynamic;
-        GameManager.instance.TeleportPlayerTo(GameManager.instance.startingPoint.position);
+        GameManager.instance.TeleportPlayerTo(GameManager.instance.startingPoint);
         CameraManager.instance.ResetToDefaultCamera();
         canMove = true;
 
@@ -319,7 +326,7 @@ public class PlayerController : MonoBehaviour
         }
 
         // Handle wall jumping
-        if (jumpPressed && wallGrabDirection != WallGrabDirection.None)
+        if (_climbJumpPressedRememberTime > 0 && wallGrabDirection != WallGrabDirection.None)
         {
             Vector2 jumpDirection = wallGrabDirection == WallGrabDirection.Left ? Vector2.right : Vector2.left;
             rb.AddForce(jumpDirection * wallJumpForce.x, ForceMode2D.Impulse);
@@ -329,7 +336,7 @@ public class PlayerController : MonoBehaviour
 
             _wallHangTime = wallHangTime;
 
-            jumpPressed = false;
+            _climbJumpPressedRememberTime = 0;
 
             //climbingWall = false;
         }

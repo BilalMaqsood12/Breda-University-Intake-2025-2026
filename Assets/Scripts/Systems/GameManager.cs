@@ -16,13 +16,14 @@ public class GameManager : MonoBehaviour
     private void Awake()
     {
         instance = this;
+
     }
 
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        TeleportPlayerTo(startingPoint.position);
+        TeleportPlayerTo(startingPoint);
     }
 
     // Update is called once per frame
@@ -32,9 +33,9 @@ public class GameManager : MonoBehaviour
     }
 
 
-    public void TeleportPlayerTo(Vector3 pos)
+    public void TeleportPlayerTo(Transform point)
     {
-        player.position = pos;
+        player.position = point.position;
     }
 
 

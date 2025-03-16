@@ -1,10 +1,11 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class LevelSwitcher : MonoBehaviour
 {
     public string levelToSwitchWith = "Level Name";
-    public GameObject levelCompleteUI;
+    public GameObject blackScreen;
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
@@ -13,13 +14,15 @@ public class LevelSwitcher : MonoBehaviour
             if (Time.timeScale > 1)
                 Time.timeScale = 1f;
 
-            levelCompleteUI.SetActive(true);
+            blackScreen.SetActive(true);
+            StartCoroutine(SwitchScenes());
             GameManager.instance.player.GetComponent<PlayerController>().canMove = false;
         }
     }
 
-    public void Continue()
+    IEnumerator SwitchScenes()
     {
+        yield return new WaitForSecondsRealtime(1);
         SceneManager.LoadScene(levelToSwitchWith);
 
     }
