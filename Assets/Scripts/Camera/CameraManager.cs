@@ -52,8 +52,8 @@ public class CameraManager : MonoBehaviour
                 cam.enabled = false;
             }
         }
-        cameraToEnable.enabled = true;
 
+        cameraToEnable.enabled = true;
         currentCamera = cameraToEnable;
     }
 
