@@ -280,11 +280,21 @@ public class PlayerController : MonoBehaviour
         GetComponent<TrailRenderer>().enabled = true;
 
         rb.bodyType = RigidbodyType2D.Dynamic;
-        GameManager.instance.TeleportPlayerTo(GameManager.instance.startingPoint);
-        CameraManager.instance.ResetToDefaultCamera();
+
+        if (GameManager.instance.currentCheckpoint == null)
+        {
+            GameManager.instance.TeleportPlayerTo(GameManager.instance.startingPoint);
+            CameraManager.instance.ResetToDefaultCamera();
+        }
+        else
+        {
+            GameManager.instance.TeleportPlayerTo(GameManager.instance.currentCheckpoint.spawnPos);
+            CameraManager.instance.SwitchCameraTo(GameManager.instance.currentCheckpoint.nearbyCamera);
+        }
+
         canMove = true;
 
-        Time.timeScale = 1f;
+        Time.timeScale = GameManager.instance.currentCheckpoint != null ? GameManager.instance.currentCheckpoint.savedTimeScale : 1f;
     }
 
 

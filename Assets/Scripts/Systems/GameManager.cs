@@ -12,6 +12,8 @@ public class GameManager : MonoBehaviour
     public float maxSpeedToBoost = 1.25f;
     public float speedBoosterDuration = 6f;
 
+    [HideInInspector] public Checkpoint currentCheckpoint;
+
 
     private void Awake()
     {

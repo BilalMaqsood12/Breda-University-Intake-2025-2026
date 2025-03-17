@@ -43,6 +43,20 @@ public class CameraManager : MonoBehaviour
         }
     }
 
+    public void SwitchCameraTo(CinemachineCamera cameraToEnable)
+    {
+        foreach (CinemachineCamera cam in allCinemachineCamsInScene)
+        {
+            if (cam != cameraToEnable)
+            {
+                cam.enabled = false;
+            }
+        }
+        cameraToEnable.enabled = true;
+
+        currentCamera = cameraToEnable;
+    }
+
     public void ResetToDefaultCamera()
     {
         foreach (CinemachineCamera cam in allCinemachineCamsInScene)
