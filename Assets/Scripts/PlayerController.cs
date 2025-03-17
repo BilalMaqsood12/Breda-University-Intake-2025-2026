@@ -294,6 +294,10 @@ public class PlayerController : MonoBehaviour
 
         canMove = true;
 
+        jumpPressed = false;
+        _groundRememberTime = 0;
+        _jumpPressedRememberTime = 0;
+
         Time.timeScale = GameManager.instance.currentCheckpoint != null ? GameManager.instance.currentCheckpoint.savedTimeScale : 1f;
     }
 
@@ -347,6 +351,10 @@ public class PlayerController : MonoBehaviour
             _wallHangTime = wallHangTime;
 
             _climbJumpPressedRememberTime = 0;
+
+            jumpPressed = false;
+            _groundRememberTime = 0;
+            _jumpPressedRememberTime = 0;
 
             //climbingWall = false;
         }
