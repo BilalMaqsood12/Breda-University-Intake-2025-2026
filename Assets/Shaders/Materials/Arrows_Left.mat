@@ -7,8 +7,8 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Shader Graphs_Portal
-  m_Shader: {fileID: -6465566751694194690, guid: 7dae7193353d689468ce6203a03c784d, type: 3}
+  m_Name: Arrows_Left
+  m_Shader: {fileID: -6465566751694194690, guid: 28737e6490d6bf14d9beb240b680ea44, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
@@ -23,8 +23,8 @@ Material:
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
-    - _SampleTexture2D_9fd32908dc414ee6a8ea5f616b4359ff_Texture_1_Texture2D:
-        m_Texture: {fileID: 10300, guid: 0000000000000000f000000000000000, type: 0}
+    - _MainTex:
+        m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - unity_Lightmaps:
@@ -40,12 +40,16 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Ints: []
-    m_Floats: []
+    m_Floats:
+    - _Activated: 0
+    - _Scale: -3.5
     m_Colors:
-    - _Color: {r: 63.999992, g: 21.21662, b: 0, a: 1}
+    - _Activated_Color: {r: 0, g: 0, b: 0, a: 0}
+    - _Normal_Color: {r: 0, g: 0, b: 0, a: 0}
+    - _Speed: {r: -2.5, g: 0, b: 0, a: 0}
   m_BuildTextureStacks: []
   m_AllowLocking: 1
---- !u!114 &1339401827005303593
+--- !u!114 &3592117953628573983
 MonoBehaviour:
   m_ObjectHideFlags: 11
   m_CorrespondingSourceObject: {fileID: 0}

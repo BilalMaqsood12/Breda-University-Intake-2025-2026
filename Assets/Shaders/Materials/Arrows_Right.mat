@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Shader Graphs_Tiled Sprite
+  m_Name: Arrows_Right
   m_Shader: {fileID: -6465566751694194690, guid: 28737e6490d6bf14d9beb240b680ea44, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
