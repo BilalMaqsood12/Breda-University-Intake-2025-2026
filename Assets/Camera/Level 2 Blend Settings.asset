@@ -16,8 +16,8 @@ MonoBehaviour:
   - From: Vertical Camera
     To: Horizontal Camera (1)
     Blend:
-      Style: 2
-      Time: 1
+      Style: 1
+      Time: 0.7
       CustomCurve:
         serializedVersion: 2
         m_Curve: []
@@ -27,8 +27,8 @@ MonoBehaviour:
   - From: Horizontal Camera (1)
     To: Static Camera (1)
     Blend:
-      Style: 2
-      Time: 1
+      Style: 1
+      Time: 0.7
       CustomCurve:
         serializedVersion: 2
         m_Curve: []

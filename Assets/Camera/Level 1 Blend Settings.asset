@@ -16,7 +16,7 @@ MonoBehaviour:
   - From: Horizontal Camera
     To: Horizontal Zoomed-In Camera
     Blend:
-      Style: 7
+      Style: 1
       Time: 1
       CustomCurve:
         serializedVersion: 2
@@ -56,8 +56,8 @@ MonoBehaviour:
   - From: Horizontal Zoomed-In Camera
     To: Static Camera (1)
     Blend:
-      Style: 2
-      Time: 1
+      Style: 1
+      Time: 0.5
       CustomCurve:
         serializedVersion: 2
         m_Curve: []
@@ -96,8 +96,8 @@ MonoBehaviour:
   - From: Static Camera (1)
     To: Horizontal Camera (1)
     Blend:
-      Style: 2
-      Time: 1
+      Style: 1
+      Time: 0.4
       CustomCurve:
         serializedVersion: 2
         m_Curve: []

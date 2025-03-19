@@ -7,10 +7,6 @@ public class CameraManager : MonoBehaviour
     public static CameraManager instance;
     public CinemachineCamera defaultCam;
 
-    public Transform[] horizontalFollowTransforms;
-    public Transform[] verticalFollowTransforms;
-
-
     CinemachineCamera[] allCinemachineCamsInScene;
 
     [HideInInspector] public CinemachineCamera currentCamera;
@@ -32,15 +28,7 @@ public class CameraManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        foreach (var followTransform in horizontalFollowTransforms)
-        {
-            followTransform.position = new Vector2(GameManager.instance.player.position.x, followTransform.position.y);
-        }
 
-        foreach (var followTransform in verticalFollowTransforms)
-        {
-            followTransform.position = new Vector2(followTransform.position.x, GameManager.instance.player.position.y);
-        }
     }
 
     public void SwitchCameraTo(CinemachineCamera cameraToEnable)

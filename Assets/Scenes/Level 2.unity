@@ -7486,8 +7486,7 @@ GameObject:
   - component: {fileID: 1522449851}
   - component: {fileID: 1522449854}
   - component: {fileID: 1522449853}
-  - component: {fileID: 1522449852}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Camera Switcher Trigger
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -7509,33 +7508,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 233648067}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!50 &1522449852
-Rigidbody2D:
-  serializedVersion: 5
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1522449850}
-  m_BodyType: 1
-  m_Simulated: 1
-  m_UseFullKinematicContacts: 0
-  m_UseAutoMass: 0
-  m_Mass: 1
-  m_LinearDamping: 0
-  m_AngularDamping: 0.05
-  m_GravityScale: 1
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_Interpolate: 1
-  m_SleepingMode: 0
-  m_CollisionDetection: 1
-  m_Constraints: 0
 --- !u!114 &1522449853
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8646,8 +8618,7 @@ GameObject:
   - component: {fileID: 2025206540}
   - component: {fileID: 2025206543}
   - component: {fileID: 2025206542}
-  - component: {fileID: 2025206541}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Camera Switcher Trigger
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -8669,33 +8640,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 2107746554}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!50 &2025206541
-Rigidbody2D:
-  serializedVersion: 5
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2025206539}
-  m_BodyType: 1
-  m_Simulated: 1
-  m_UseFullKinematicContacts: 0
-  m_UseAutoMass: 0
-  m_Mass: 1
-  m_LinearDamping: 0
-  m_AngularDamping: 0.05
-  m_GravityScale: 1
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_Interpolate: 1
-  m_SleepingMode: 0
-  m_CollisionDetection: 1
-  m_Constraints: 0
 --- !u!114 &2025206542
 MonoBehaviour:
   m_ObjectHideFlags: 0
