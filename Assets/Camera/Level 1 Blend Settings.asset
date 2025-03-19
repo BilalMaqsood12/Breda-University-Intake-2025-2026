@@ -93,17 +93,6 @@ MonoBehaviour:
         m_PreInfinity: 2
         m_PostInfinity: 2
         m_RotationOrder: 4
-  - From: Static Camera (1)
-    To: Horizontal Camera (1)
-    Blend:
-      Style: 1
-      Time: 0.4
-      CustomCurve:
-        serializedVersion: 2
-        m_Curve: []
-        m_PreInfinity: 0
-        m_PostInfinity: 0
-        m_RotationOrder: 4
   - From: Horizontal Camera (1)
     To: Static Camera (1)
     Blend:
