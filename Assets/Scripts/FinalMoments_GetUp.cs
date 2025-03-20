@@ -1,5 +1,7 @@
 using System.Collections;
+using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class FinalMoments_GetUp : MonoBehaviour
 {
@@ -9,6 +11,7 @@ public class FinalMoments_GetUp : MonoBehaviour
     public GameObject awokenBodyDialogues;
     public Timer timer;
     public GameObject endScreen;
+    public TextMeshProUGUI finalTimeText;
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
@@ -42,5 +45,11 @@ public class FinalMoments_GetUp : MonoBehaviour
         CanvasGroup canvasGroup = endScreen.GetComponent<CanvasGroup>();
         canvasGroup.alpha = 0f;
         LeanTween.alphaCanvas(canvasGroup, 1f, 2f);
+        finalTimeText.text = "You finished the game in : " + timer.GetComponent<TextMeshProUGUI>().text;
+    }
+
+    public void ReturnToHome()
+    {
+        SceneManager.LoadScene("Main Menu");
     }
 }

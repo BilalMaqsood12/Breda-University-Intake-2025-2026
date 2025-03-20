@@ -1,11 +1,20 @@
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Timer : MonoBehaviour
 {
     public static float time;
 
     [SerializeField] private TextMeshProUGUI timerText;
+
+    private void Start()
+    {
+        if (SceneManager.GetActiveScene().name == "Level 1")
+        {
+            time = 0;
+        }
+    }
 
     void Update()
     {
